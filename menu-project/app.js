@@ -118,11 +118,11 @@ function displayMenuItems(menuItems){
     let displayMenu = menuItems.map(function(item){
         return `
         <article class = "menu-item">
-            <img img src= ${item.img} alt= $ {item.title} class ="photo" />
+            <img img src= ${item.img} alt= ${item.title} class ="photo" />
             <div class = "item-info" 
                 <header>
                     <h4> ${item.title}</h4>
-                    <h4 class = "price"> $${item.price}</h4>
+                    <h4 class = "price"> N${item.price}</h4>
                 </header> 
                 <p class= "item-text">
                     ${item.desc}
@@ -137,3 +137,44 @@ function displayMenuItems(menuItems){
     sectionCenter.innerHTML = displayMenu;
 
 };
+
+function displayMenuButtons(){
+    const categories = menu.reduce(function(values,item){
+        if (!values.includes(item.category)){
+            values.push(item.category);
+        }
+        return values;
+    }, ["all"]);
+
+    //All the catergories are now in this list that we iterate over below
+    const categoryBtns = categories.map(function (category){
+        return `<button type= "button" class = "filter-btn" data-id= ${category}>
+        ${category}</button>`;
+    })
+    .join("");
+
+    btnContainer.innerHTML = categoryBtns;
+    const filterBtns = btnContainer.querySelectorAll(".filter-btn");
+    console.log(filterBtns);
+
+    filterBtns.forEach(function(btn){
+        btn.addEventListener("click", function(e){
+            const category = e.currentTarget.dataset.id;
+
+            //creating a new list menuCategory with filter <--- Fiyin's comment
+            //menuItem is the iteration i for every step of filter
+            const menuCategory = menu.filter(function(menuItem){
+                if (menuItem.category === category){
+                    return menuItem; // A smaller list is created of only the content in menu that have the clicked menu item
+                }// to illustrate [i,i,i,i], i is menuItem
+                // what it's doing is that its creating a new list of items that contains each category upon every click and its going to render that list
+            });// this is updated upon every click
+            if (category === "all"){
+                displayMenuItems(menu);
+            }else{displayMenuItems(menuCategory);
+            }
+        });
+    });
+
+
+}
